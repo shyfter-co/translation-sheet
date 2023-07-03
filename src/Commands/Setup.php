@@ -14,20 +14,28 @@ class Setup extends Command
 
     public function handle(Spreadsheet $spreadsheet)
     {
-        $spreadsheet->ensureConfiguredSheetsAreCreated();
+        $this->output->writeln('<info>Run Shyfter custom setup first!</info>');
 
-        $spreadsheet->sheets()->each(function (TranslationsSheet $translationsSheet) {
-            $this->output->writeln(
-                '<comment>Setting up translations sheet [' . $translationsSheet->getTitle() . ']</comment>'
-            );
+        $success = $this->call(ShyfterCustomSetup::class);
 
-            $translationsSheet->api()->addBatchRequests(
-                $translationsSheet->api()->setTabColor($translationsSheet->getId(), $translationsSheet->getTabColor())
-            );
-        });
+        if ($success) {
+            $this->output->writeln('<info>Shyfter custom setup is done successfully!</info>');
 
-        $spreadsheet->api()->sendBatchRequests();
+            $spreadsheet->ensureConfiguredSheetsAreCreated();
 
-        $this->output->writeln('<info>Done. Spreasheet is ready.</info>');
+            $spreadsheet->sheets()->each(function (TranslationsSheet $translationsSheet) {
+                $this->output->writeln(
+                    '<comment>Setting up translations sheet [' . $translationsSheet->getTitle() . ']</comment>'
+                );
+
+                $translationsSheet->api()->addBatchRequests(
+                    $translationsSheet->api()->setTabColor($translationsSheet->getId(), $translationsSheet->getTabColor())
+                );
+            });
+
+            $spreadsheet->api()->sendBatchRequests();
+
+            $this->output->writeln('<info>Done. Spreasheet is ready.</info>');
+        }
     }
 }

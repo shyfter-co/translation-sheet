@@ -82,17 +82,35 @@ return [
     |
     */
     'extra_sheets' => [
-        /*
         [
-            // Sheet name
-            'name' => 'Web App',
-
-            // Relative path to the resources/lang folder, where the translations files are stored
-            'path' => resource_path('web-app/lang'),
-
-            // Tab color
-            'tabColor' => '#0000FF',
+            "name" => "frontend",
+            "repo" => "git@github.com:shyfter-co/frontend.git",
+            "path" => "public/locales",
+            "tabColor" => "#00ff00"
+        ],
+        [
+            "name" => "shyfter",
+            "repo" => "git@github.com:shyfter-co/Shyfter.git",
+            "path" => "resources/lang",
+            "tabColor" => "#6600cc"
+        ],
+        [
+            "name" => "shyfter-staff",
+            "repo" => "git@github.com:shyfter-co/shyfter-staff.git",
+            "path" => "shyfter-staff/locales",
+            "tabColor" => "#6600cc"
+        ],
+        [
+            "name" => "shyfter-pos",
+            "repo" => "git@github.com:shyfter-co/shyfter-pos.git",
+            "path" => "shyfter-pos/locales",
+            "tabColor" => "#66ffcc"
+        ],
+        [
+            "name" => "try-shyfter-app",
+            "repo" => "git@github.com:shyfter-co/try-shyfter-app.git",
+            "path" => "try-shyfter-app/public/locales",
+            "tabColor" => "#000999"
         ]
-        */
     ],
 ];
