@@ -23,7 +23,7 @@ return [
     | Google service account credentials file path
     |--------------------------------------------------------------------------
     */
-    'serviceAccountCredentialsFile' => env('TS_SERVICE_ACCOUNT_CREDENTIALS_FILE', base_path('resources/google/service-account-crendentials.json')),
+    'serviceAccountCredentialsFile' => env('TS_SERVICE_ACCOUNT_CREDENTIALS_FILE', base_path('storage/google/service-account-crendentials.json')),
 
     /*
     |--------------------------------------------------------------------------
@@ -66,8 +66,10 @@ return [
      *
      */
     'primary_sheet' => [
-        'name' => 'Translations',
+        'name' => 'ShyfterMain',
     ],
+
+    'base_path' => 'translation-sources',
 
     /*
     |--------------------------------------------------------------------------
@@ -78,7 +80,7 @@ return [
 
     | ie. if you handle your web app or mobile app translation in laravel app. you can instruct
     | translations-sheet to add them as sheets.
-    | Files for theses sheets must no live under resources/lang folder. But, resources/web-app-lang for instance.
+    | Files for these sheets must not live under resources/lang folder. But, resources/web-app-lang for instance.
     |
     */
     'extra_sheets' => [
@@ -89,28 +91,22 @@ return [
             "tabColor" => "#00ff00"
         ],
         [
-            "name" => "shyfter",
-            "repo" => "git@github.com:shyfter-co/Shyfter.git",
-            "path" => "resources/lang",
-            "tabColor" => "#6600cc"
-        ],
-        [
             "name" => "shyfter-staff",
             "repo" => "git@github.com:shyfter-co/shyfter-staff.git",
-            "path" => "shyfter-staff/locales",
+            "path" => "locales",
             "tabColor" => "#6600cc"
-        ],
-        [
-            "name" => "shyfter-pos",
-            "repo" => "git@github.com:shyfter-co/shyfter-pos.git",
-            "path" => "shyfter-pos/locales",
-            "tabColor" => "#66ffcc"
         ],
         [
             "name" => "try-shyfter-app",
             "repo" => "git@github.com:shyfter-co/try-shyfter-app.git",
-            "path" => "try-shyfter-app/public/locales",
+            "path" => "public/locales",
             "tabColor" => "#000999"
-        ]
+        ],
+        [
+            "name" => "shyfter-pos",
+            "repo" => "git@github.com:shyfter-co/shyfter-pos.git",
+            "path" => "locales",
+            "tabColor" => "#66ffcc"
+        ],
     ],
 ];

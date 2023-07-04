@@ -14,28 +14,70 @@ class Setup extends Command
 
     public function handle(Spreadsheet $spreadsheet)
     {
-        $this->output->writeln('<info>Run Shyfter custom setup first!</info>');
+        $this->output->writeln('<info>Running Shyfter custom setup first!</info>');
+        $this->customShyfterSetup();
 
-        $success = $this->call(ShyfterCustomSetup::class);
+        $spreadsheet->ensureConfiguredSheetsAreCreated();
 
-        if ($success) {
-            $this->output->writeln('<info>Shyfter custom setup is done successfully!</info>');
+        $spreadsheet->sheets()->each(function (TranslationsSheet $translationsSheet) {
+            $this->output->writeln(
+                '<comment>Setting up translations sheet [' . $translationsSheet->getTitle() . ']</comment>'
+            );
 
-            $spreadsheet->ensureConfiguredSheetsAreCreated();
+            $translationsSheet->api()->addBatchRequests(
+                $translationsSheet->api()->setTabColor($translationsSheet->getId(), $translationsSheet->getTabColor())
+            );
+        });
 
-            $spreadsheet->sheets()->each(function (TranslationsSheet $translationsSheet) {
-                $this->output->writeln(
-                    '<comment>Setting up translations sheet [' . $translationsSheet->getTitle() . ']</comment>'
-                );
+        $spreadsheet->api()->sendBatchRequests();
 
-                $translationsSheet->api()->addBatchRequests(
-                    $translationsSheet->api()->setTabColor($translationsSheet->getId(), $translationsSheet->getTabColor())
-                );
-            });
+        $this->output->writeln('<info>Done. Spreasheet is ready.</info>');
+    }
 
-            $spreadsheet->api()->sendBatchRequests();
+    protected function customShyfterSetup()
+    {
+        $translationsSourceDir = config('translation_sheet.base_path');
+        $this->addDirectoryIfDoesNotExist($translationsSourceDir);
 
-            $this->output->writeln('<info>Done. Spreasheet is ready.</info>');
+        $directory = storage_path($translationsSourceDir);
+        $repositories = config('translation_sheet.extra_sheets');
+        $successMessages = [];
+
+        if ($dir = opendir($directory)) {
+
+            foreach ($repositories as $repository) {
+                $repositoryName = $repository['name'];
+
+                if (file_exists("$directory/$repositoryName")) {
+                    $this->info("Skipping! The requested repository [$repositoryName] already exist in the translations folder.");
+                } else {
+                    $output = null;
+                    $res = null;
+                    $gitRepository = $repository['repo'];
+                    exec("cd $directory && git clone $gitRepository", $output, $res);
+
+                    if ($res === Command::SUCCESS) {
+                        $this->info("Repository [$repositoryName] cloned successfully");
+                    }
+                    if ($res === Command::FAILURE) {
+                        $this->error("Repository [$repositoryName] could not get cloned!");
+                    }
+
+                }
+            }
+        }
+
+        closedir($dir);
+    }
+
+    /**
+     * @param string $directory
+     * @return void
+     */
+    protected function addDirectoryIfDoesNotExist(string $directory): void
+    {
+        if (!is_dir(storage_path($directory))) {
+            mkdir(storage_path($directory));
         }
     }
 }

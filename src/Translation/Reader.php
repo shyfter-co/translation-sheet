@@ -108,7 +108,9 @@ class Reader
         }
 
         foreach ($this->files->files($path) as $file) {
-            $this->loadTranslations($file->getBasename('.json'), '*', '*', $file);
+            if ($file->getExtension() === 'json') {
+                $this->loadTranslations($file->getBasename('.json'), '*', '*', $file);
+            }
         }
     }
 

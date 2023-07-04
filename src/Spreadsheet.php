@@ -199,11 +199,17 @@ class Spreadsheet
                     ->map(function ($sheetConfig) {
                         /** @var TranslationsSheet $instance */
                         $instance = resolve(TranslationsSheet::class);
+                        $path = storage_path(
+                            config(
+                                'translation_sheet.base_path').
+                            DIRECTORY_SEPARATOR.$sheetConfig['name'].
+                            DIRECTORY_SEPARATOR.$sheetConfig['path']
+                        );
 
                         return $instance
                             ->markAsExtraSheet()
                             ->setTitle($sheetConfig['name'])
-                            ->setPath($sheetConfig['path'])
+                            ->setPath($path)
                             ->setTabColor($sheetConfig['tabColor']);
                     })
             );
