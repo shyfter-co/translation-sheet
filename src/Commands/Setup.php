@@ -41,7 +41,6 @@ class Setup extends Command
 
         $directory = storage_path($translationsSourceDir);
         $repositories = config('translation_sheet.extra_sheets');
-        $successMessages = [];
 
         if ($dir = opendir($directory)) {
 
