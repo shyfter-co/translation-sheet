@@ -97,7 +97,7 @@ class Reader
      *
      * @param string $path to directory to scan
      */
-    protected function scanDirectory($path)
+    protected function scanDirectory(string $path)
     {
         foreach ($this->files->directories($path) as $directory) {
             if ($this->isVendorDirectory($directory)) {
@@ -108,6 +108,7 @@ class Reader
         }
 
         foreach ($this->files->files($path) as $file) {
+            // parse only json files
             if ($file->getExtension() === 'json') {
                 $this->loadTranslations($file->getBasename('.json'), '*', '*', $file);
             }
