@@ -1,33 +1,48 @@
 <?php
 
-namespace Nikaia\TranslationSheet\Commands;
+namespace App\Console\Commands;
 
+use App\Department;
+use App\Notifications\TranslationsPushedNotification;
+use App\Services\Slack;
+use App\Shyfter\Department\Notificant;
+use App\Shyfter\Department\Notificants;
 use Illuminate\Console\Command;
-use Nikaia\TranslationSheet\Sheet\TranslationsSheet;
 use Nikaia\TranslationSheet\SheetPusher;
 use Nikaia\TranslationSheet\Spreadsheet;
-use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 
-class Push extends Command
+class PushToRepositories extends Command
 {
-    protected $signature = 'translation_sheet:push';
+    protected $signature = 'translation_sheet:push-repositories';
+    protected $description = 'Push updated translations to Shyfter repositories.';
 
-    protected $description = 'Push translation from your local languages files to the spreadsheet';
-
+    /**
+     * @throws \Exception
+     */
     public function handle(SheetPusher $pusher, Spreadsheet $spreadsheet)
     {
-        try {
-            $spreadsheet->sheets()->each(function (TranslationsSheet $translationsSheet) use ($pusher) {
-                $pusher
-                    ->setTranslationsSheet($translationsSheet)
-                    ->withOutput($this->output)
-                    ->push();
-                
-                $translationsSheet->api()->reset();
-            });
-        } catch (DirectoryNotFoundException $e) {
-            $this->error($e->getMessage());
-            $this->error('Something is wrong. Did you just add an extra sheet ? try to re-run translation_sheet:setup!');
-        }
+        $repositories = config('translation_sheet.extra_sheets');
+        $basePath = config('translation_sheet.base_path');
+
+        collect($repositories)->each(function ($repo) use ($basePath) {
+            $repository = $repo['repo'];
+            $this->info("Preparing to push to git repository: $repository");
+            $name = $repo['name'];
+            $directory = storage_path("$basePath/$name");
+
+            //Git Push to chosen remote
+            $branch = uniqid('translations-');
+            exec("cd $directory && git checkout -b $branch");
+            exec("git add . &&  git commit -m 'updating translation' ");
+			exec("git push origin $branch -f");
+
+            $this->info("Git pushed branch $branch to repository $repository");
+            Notification::route('mail', 'jg@shyfter.co')
+                ->route('mail', 'lh@shyfter.co')
+                ->route('mail', 'maxim.kerstens@shyfter.co')
+//                ->route('slack', 'https://hooks.slack.com/services/...')
+                ->notify(new TranslationsPushedNotification($repository, $branch));
+        });
+
     }
 }

@@ -66,7 +66,7 @@ return [
      *
      */
     'primary_sheet' => [
-        'name' => 'ShyfterMain',
+        'name' => 'shyfter',
     ],
 
     'base_path' => 'translation-sources',
@@ -84,23 +84,30 @@ return [
     |
     */
     'extra_sheets' => [
+        // MAIN REPOSITORY
+//        [
+//            "name" => "shyfter",
+//            "repo" => "git@github.com:shyfter-co/Shyfter.git",
+//            "path" => "resources",
+//            "tabColor" => "#ffb703"
+//        ],
         [
             "name" => "frontend",
             "repo" => "git@github.com:shyfter-co/frontend.git",
             "path" => "public/locales",
-            "tabColor" => "#00ff00"
+            "tabColor" => "#76c893"
         ],
         [
             "name" => "shyfter-staff",
             "repo" => "git@github.com:shyfter-co/shyfter-staff.git",
             "path" => "locales",
-            "tabColor" => "#6600cc"
+            "tabColor" => "#7209b7"
         ],
         [
             "name" => "try-shyfter-app",
             "repo" => "git@github.com:shyfter-co/try-shyfter-app.git",
             "path" => "public/locales",
-            "tabColor" => "#000999"
+            "tabColor" => "#ff9f1c"
         ],
         [
             "name" => "shyfter-pos",

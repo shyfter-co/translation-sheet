@@ -14,7 +14,11 @@
         "google/apiclient": "^2.1",
         "illuminate/console": "~5.8.0|^6.0|^7.0|^8.0|^v9.0|^10.0",
         "illuminate/filesystem": "~5.8.0|^6.0|^7.0|^8.0|^v9.0|^10.0",
-        "illuminate/support": "~5.8.0|^6.0|^7.0|^8.0|^v9.0|^10.0"
+        "illuminate/support": "~5.8.0|^6.0|^7.0|^8.0|^v9.0|^10.0",
+        "illuminate/notifications": "~5.8.0|^6.0|^7.0|^8.0|^v9.0|^10.0",
+        "illuminate/bus": "~5.8.0|^6.0|^7.0|^8.0|^v9.0|^10.0",
+        "illuminate/contracts": "~5.8.0|^6.0|^7.0|^8.0|^v9.0|^10.0",
+        "nesbot/carbon": "^2.63"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.0",
