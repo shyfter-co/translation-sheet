@@ -76,7 +76,7 @@ return [
     | Extra Sheets
     |--------------------------------------------------------------------------
     | This config area give you the possibility to other sheets (tabs) to your spreadsheet.
-    | they can be used to translate sperately other sections of your application.
+    | they can be used to translate separately other sections of your application.
 
     | ie. if you handle your web app or mobile app translation in laravel app. you can instruct
     | translations-sheet to add them as sheets.
@@ -85,34 +85,39 @@ return [
     */
     'extra_sheets' => [
         // MAIN REPOSITORY
-//        [
-//            "name" => "shyfter",
-//            "repo" => "git@github.com:shyfter-co/Shyfter.git",
-//            "path" => "resources",
-//            "tabColor" => "#ffb703"
-//        ],
+        [
+            "name" => "shyfter",
+            "repo" => "git@github.com:shyfter-co/Shyfter.git",
+            "path" => "resources",
+            "master" => "master",
+            "tabColor" => "#ffb703"
+        ],
         [
             "name" => "frontend",
             "repo" => "git@github.com:shyfter-co/frontend.git",
             "path" => "public/locales",
+            "master" => "master",
             "tabColor" => "#76c893"
         ],
         [
             "name" => "shyfter-staff",
             "repo" => "git@github.com:shyfter-co/shyfter-staff.git",
             "path" => "locales",
+            "master" => "master",
             "tabColor" => "#7209b7"
         ],
         [
             "name" => "try-shyfter-app",
             "repo" => "git@github.com:shyfter-co/try-shyfter-app.git",
             "path" => "public/locales",
+            "master" => "master",
             "tabColor" => "#ff9f1c"
         ],
         [
             "name" => "shyfter-pos",
             "repo" => "git@github.com:shyfter-co/shyfter-pos.git",
             "path" => "locales",
+            "master" => "master",
             "tabColor" => "#66ffcc"
         ],
     ],
