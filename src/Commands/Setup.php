@@ -46,14 +46,14 @@ class Setup extends Command
 
             foreach ($repositories as $repository) {
                 $repositoryName = $repository['name'];
+                $output = null;
+                $res = null;
+                $gitRepository = $repository['repo'];
+                $branch = $repository['master'];
 
                 if (file_exists("$directory/$repositoryName")) {
                     $this->info("Skipping! The requested repository [$repositoryName] already exist in the translations folder.");
                 } else {
-                    $output = null;
-                    $res = null;
-                    $gitRepository = $repository['repo'];
-                    $branch = $repository['branch'];
                     exec("cd $directory && git clone --branch $branch $gitRepository", $output, $res);
 
                     if ($res === Command::SUCCESS) {
