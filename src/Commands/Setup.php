@@ -53,7 +53,8 @@ class Setup extends Command
                     $output = null;
                     $res = null;
                     $gitRepository = $repository['repo'];
-                    exec("cd $directory && git clone --branch master $gitRepository", $output, $res);
+                    $branch = $repository['branch'];
+                    exec("cd $directory && git clone --branch $branch $gitRepository", $output, $res);
 
                     if ($res === Command::SUCCESS) {
                         $this->info("Repository [$repositoryName] cloned successfully");

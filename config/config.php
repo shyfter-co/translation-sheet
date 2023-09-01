@@ -66,7 +66,7 @@ return [
      *
      */
     'primary_sheet' => [
-        'name' => 'shyfter',
+        'name' => 'atlas',
     ],
 
     'base_path' => 'translation-sources',
@@ -86,17 +86,10 @@ return [
     'extra_sheets' => [
         // MAIN REPOSITORY
         [
-            "name" => "shyfter",
-            "repo" => "git@github.com:shyfter-co/Shyfter.git",
-            "path" => "resources",
-            "master" => "master",
-            "tabColor" => "#ffb703"
-        ],
-        [
             "name" => "frontend",
             "repo" => "git@github.com:shyfter-co/frontend.git",
             "path" => "public/locales",
-            "master" => "master",
+            "master" => "prod",
             "tabColor" => "#76c893"
         ],
         [
@@ -110,7 +103,7 @@ return [
             "name" => "try-shyfter-app",
             "repo" => "git@github.com:shyfter-co/try-shyfter-app.git",
             "path" => "public/locales",
-            "master" => "master",
+            "master" => "prod",
             "tabColor" => "#ff9f1c"
         ],
         [
@@ -119,6 +112,13 @@ return [
             "path" => "locales",
             "master" => "master",
             "tabColor" => "#66ffcc"
+        ],
+        [
+            "name" => "Shyfter",
+            "repo" => "git@github.com:shyfter-co/Shyfter.git",
+            "path" => "resources",
+            "master" => "master",
+            "tabColor" => "#ffb703"
         ],
     ],
 ];
