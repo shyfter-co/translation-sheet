@@ -6,6 +6,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Translation\FileLoader;
 use Nikaia\TranslationSheet\Sheet\TranslationsSheet;
 
 class Reader
@@ -146,7 +147,8 @@ class Reader
         foreach ($this->files->files($directory) as $file) {
             $info = pathinfo($file);
             $group = $info['filename'];
-            $this->loadTranslations($locale, $group, $namespace, $file);
+
+            $this->loadTranslations($locale, $group, $namespace, $file, $this->translationSheet->getPath());
         }
     }
 
@@ -158,12 +160,18 @@ class Reader
      * @param $namespace
      * @param $file
      */
-    private function loadTranslations($locale, $group, $namespace, $file)
+    private function loadTranslations($locale, $group, $namespace, $file, $sheetTranslationPathBase = null)
     {
         if ($this->translationSheet->isExtraSheet()) {
+//        if ($file->getExtension() === 'json') {
             $translations = Arr::dot(json_decode(file_get_contents($file), true));
         } else {
-            $translations = Arr::dot($this->app['translator']->getLoader()->load($locale, $group, $namespace));
+            if (str_contains($file->getFilename(), 'enums')) {
+//                Todo: place issue in git!
+                return;
+            }
+            $loader = new FileLoader(app('files'), [$sheetTranslationPathBase, app('path.lang')]);
+            $translations = Arr::dot($loader->load($locale, $group, $namespace));
         }
 
         foreach ($translations as $key => $value) {

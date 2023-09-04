@@ -66,9 +66,10 @@ return [
      *
      */
     'primary_sheet' => [
-        'name' => 'atlas',
+        'name' => 'Shyfter-primary',
     ],
 
+    'entry_point' => base_path('storage/translation-sources/Shyfter/resources'),
     'base_path' => 'translation-sources',
 
     /*
@@ -84,41 +85,41 @@ return [
     |
     */
     'extra_sheets' => [
-        // MAIN REPOSITORY
         [
-            "name" => "frontend",
-            "repo" => "git@github.com:shyfter-co/frontend.git",
-            "path" => "public/locales",
-            "master" => "prod",
-            "tabColor" => "#76c893"
+            'name' => 'frontend',
+            'repo' => 'git@github.com:shyfter-co/frontend.git',
+            'path' => 'public/locales',
+            'master' => 'prod',
+            'tabColor' => '#76c893'
         ],
         [
-            "name" => "shyfter-staff",
-            "repo" => "git@github.com:shyfter-co/shyfter-staff.git",
-            "path" => "locales",
-            "master" => "master",
-            "tabColor" => "#7209b7"
+            'name' => 'shyfter-staff',
+            'repo' => 'git@github.com:shyfter-co/shyfter-staff.git',
+            'path' => 'locales',
+            'master' => 'master',
+            'tabColor' => '#7209b7'
         ],
         [
-            "name" => "try-shyfter-app",
-            "repo" => "git@github.com:shyfter-co/try-shyfter-app.git",
-            "path" => "public/locales",
-            "master" => "prod",
-            "tabColor" => "#ff9f1c"
+            'name' => 'try-shyfter-app',
+            'repo' => 'git@github.com:shyfter-co/try-shyfter-app.git',
+            'path' => 'public/locales',
+            'master' => 'prod',
+            'tabColor' => '#ff9f1c'
         ],
         [
-            "name" => "shyfter-pos",
-            "repo" => "git@github.com:shyfter-co/shyfter-pos.git",
-            "path" => "locales",
-            "master" => "master",
-            "tabColor" => "#66ffcc"
+            'name' => 'shyfter-pos',
+            'repo' => 'git@github.com:shyfter-co/shyfter-pos.git',
+            'path' => 'locales',
+            'master' => 'master',
+            'tabColor' => '#66ffcc'
         ],
         [
-            "name" => "Shyfter",
-            "repo" => "git@github.com:shyfter-co/Shyfter.git",
-            "path" => "resources",
-            "master" => "master",
-            "tabColor" => "#ffb703"
-        ],
+            'name' => 'Shyfter',
+            'repo' => 'git@github.com:shyfter-co/Shyfter.git',
+            'path' =>  'resources/lang',
+            'master' => 'master',
+            'tabColor' => '#ef233c',
+            'laravel' => true,
+        ]
     ],
 ];

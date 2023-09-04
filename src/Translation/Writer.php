@@ -6,6 +6,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Nikaia\TranslationSheet\Commands\Output;
 use Nikaia\TranslationSheet\Sheet\TranslationsSheet;
 use Nikaia\TranslationSheet\Spreadsheet;
@@ -65,8 +66,8 @@ class Writer
         $this
             ->groupTranslationsByFile()
             ->each(function ($items, $sourceFile) {
-
                 if ($this->files->extension($sourceFile) === 'json') {
+                    $locale = explode('.', $sourceFile)[0];
                     $this->writeJsonFile(
                         $this->translationSheet->getPath() . '/' . $sourceFile,
                         $items

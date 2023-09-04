@@ -193,26 +193,30 @@ class Spreadsheet
 
     public function configuredSheets()
     {
-        return collect([static::primaryTranslationSheet()])
-            ->merge(
-                collect(config('translation_sheet.extra_sheets'))
-                    ->map(function ($sheetConfig) {
-                        /** @var TranslationsSheet $instance */
-                        $instance = resolve(TranslationsSheet::class);
-                        $path = storage_path(
-                            config(
-                                'translation_sheet.base_path').
-                            DIRECTORY_SEPARATOR.$sheetConfig['name'].
-                            DIRECTORY_SEPARATOR.$sheetConfig['path']
-                        );
+        return collect(config('translation_sheet.extra_sheets'))
+            ->map(function ($sheetConfig) {
+                /** @var TranslationsSheet $instance */
+                $instance = resolve(TranslationsSheet::class);
+                $path = storage_path(
+                    config(
+                        'translation_sheet.base_path').
+                    DIRECTORY_SEPARATOR.$sheetConfig['name'].
+                    DIRECTORY_SEPARATOR.$sheetConfig['path']
+                );
 
-                        return $instance
-                            ->markAsExtraSheet()
-                            ->setTitle($sheetConfig['name'])
-                            ->setPath($path)
-                            ->setTabColor($sheetConfig['tabColor']);
-                    })
-            );
+
+                if(data_get($sheetConfig, 'laravel', false)) {
+                    $instance->markAsPrimarySheet();
+                }
+                else {
+                    $instance->markAsExtraSheet();
+                }
+
+                return $instance
+                    ->setTitle($sheetConfig['name'])
+                    ->setPath($path)
+                    ->setTabColor($sheetConfig['tabColor']);
+            });
     }
 
     public function configuredExtraSheets()
