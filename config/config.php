@@ -66,10 +66,8 @@ return [
      *
      */
     'primary_sheet' => [
-        'name' => 'Shyfter-primary',
+        'name' => 'shyfter-primary',
     ],
-
-    'entry_point' => base_path('storage/translation-sources/Shyfter/resources'),
     'base_path' => 'translation-sources',
 
     /*
