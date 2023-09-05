@@ -2,10 +2,12 @@
 
 namespace Nikaia\TranslationSheet\Commands;
 
-use App\Notifications\TranslationsPushedNotification;
+use Nikaia\TranslationSheet\Notifications\TranslationsPushedNotification;
 use Illuminate\Console\Command;
 use Nikaia\TranslationSheet\SheetPusher;
 use Nikaia\TranslationSheet\Spreadsheet;
+use Illuminate\Support\Facades\Notification;
+use Spatie\SlackAlerts\Facades\SlackAlert;
 
 class PushToRepositories extends Command
 {
@@ -24,26 +26,37 @@ class PushToRepositories extends Command
             $repository = $repo['repo'];
             $this->info("Preparing to push to git repository: $repository");
             $name = $repo['name'];
+            $master = $repo['master'];
             $directory = storage_path("$basePath/$name");
 
             //Git Push to chosen remote
             $branch = uniqid('translations-');
-            $hasChange = true;
+            $this->info("Checking if branch: $branch has any changes");
             exec("cd $directory && git checkout -b $branch && git status --porcelain", $output);
-            if ($output === [] || $output[1] === "Your branch is up-to-date with 'origin/master'.") {
-                $hasChange = false;
-                exec("git -D $branch");
-            }
+            if (empty($output)) {
+                $this->info("No changes found on branch: $branch");
+                $this->info("Deleting branch: $branch");
+                exec("cd $directory && git checkout $master && git branch -D $branch");
+                $message = "No changes found on branch: $branch. Branch: $branch deleted.";
+                SlackAlert::to('translations')->message($message);
+            } else {
+                $this->info("Preparing to push to git repository: $repository");
+                exec("cd $directory && git checkout $branch && git add . && git commit -m 'updating translation' && git push origin $branch", $output, $result);
 
-            if ($hasChange) {
-                exec("git add . &&  git commit -m 'updating translation' ");
-                exec("git push origin $branch -f");
+                switch ($result) {
+                    case Command::SUCCESS:
+                        $message = "Git pushed branch $branch to the repository $repository";
+                        $this->info($message);
+                        SlackAlert::to('translations')->message($message);
+                    case Command::FAILURE:
+                        $message = "Could not push branch $branch to the repository $repository";
+                        $this->error("Repository [$repository] could not get cloned!");
+                        SlackAlert::to('translations')->message($message);
+                }
 
-                $this->info("Git pushed branch $branch to repository $repository");
                 Notification::route('mail', 'jg@shyfter.co')
-//                    ->route('mail', 'lh@shyfter.co')
-//                    ->route('mail', 'maxim.kerstens@shyfter.co')
-//                ->route('slack', 'https://hooks.slack.com/services/...')
+                    ->route('mail', 'lh@shyfter.co')
+                    ->route('mail', 'mk@shyfter.co')
                     ->notify(new TranslationsPushedNotification($repository, $branch));
             }
         });
