@@ -2,11 +2,7 @@
 
 namespace Nikaia\TranslationSheet\Commands;
 
-use App\Department;
 use App\Notifications\TranslationsPushedNotification;
-use App\Services\Slack;
-use App\Shyfter\Department\Notificant;
-use App\Shyfter\Department\Notificants;
 use Illuminate\Console\Command;
 use Nikaia\TranslationSheet\SheetPusher;
 use Nikaia\TranslationSheet\Spreadsheet;
