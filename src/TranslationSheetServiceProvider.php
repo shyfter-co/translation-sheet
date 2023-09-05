@@ -13,6 +13,7 @@ use Nikaia\TranslationSheet\Commands\Push;
 use Nikaia\TranslationSheet\Commands\Setup;
 use Nikaia\TranslationSheet\Commands\Status;
 use Nikaia\TranslationSheet\Commands\Unlock;
+use Nikaia\TranslationSheet\Commands\PushToRepositories;
 
 class TranslationSheetServiceProvider extends ServiceProvider
 {
@@ -66,6 +67,7 @@ class TranslationSheetServiceProvider extends ServiceProvider
             Status::class,
             Open::class,
             Publish::class,
+            PushToRepositories::class
         ]);
     }
 }
