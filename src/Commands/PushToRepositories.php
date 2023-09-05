@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Nikaia\TranslationSheet\Commands;
 
 use App\Department;
 use App\Notifications\TranslationsPushedNotification;
@@ -32,17 +32,24 @@ class PushToRepositories extends Command
 
             //Git Push to chosen remote
             $branch = uniqid('translations-');
-            exec("cd $directory && git checkout -b $branch");
-            exec("git add . &&  git commit -m 'updating translation' ");
-			exec("git push origin $branch -f");
+            $hasChange = true;
+            exec("cd $directory && git checkout -b $branch && git status --porcelain", $output);
+            if ($output === [] || $output[1] === "Your branch is up-to-date with 'origin/master'.") {
+                $hasChange = false;
+                exec("git -D $branch");
+            }
 
-            $this->info("Git pushed branch $branch to repository $repository");
-            Notification::route('mail', 'jg@shyfter.co')
-                ->route('mail', 'lh@shyfter.co')
-                ->route('mail', 'maxim.kerstens@shyfter.co')
+            if ($hasChange) {
+                exec("git add . &&  git commit -m 'updating translation' ");
+                exec("git push origin $branch -f");
+
+                $this->info("Git pushed branch $branch to repository $repository");
+                Notification::route('mail', 'jg@shyfter.co')
+//                    ->route('mail', 'lh@shyfter.co')
+//                    ->route('mail', 'maxim.kerstens@shyfter.co')
 //                ->route('slack', 'https://hooks.slack.com/services/...')
-                ->notify(new TranslationsPushedNotification($repository, $branch));
+                    ->notify(new TranslationsPushedNotification($repository, $branch));
+            }
         });
-
     }
 }
