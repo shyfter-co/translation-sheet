@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Notifications;
+namespace Nikaia\TranslationSheet\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class TranslationsPushedNotification extends Notification implements ShouldQueue
+class TranslationsPushedNotification extends Notification
 {
     use Queueable;
 
@@ -23,8 +23,6 @@ class TranslationsPushedNotification extends Notification implements ShouldQueue
     {
         $this->repository = $repository;
         $this->branch = $branch;
-
-        $this->onQueue('notifications-native');
     }
 
     /**
@@ -50,6 +48,6 @@ class TranslationsPushedNotification extends Notification implements ShouldQueue
 
         return (new MailMessage)
             ->line("New translations branch '$this->branch' was pushed to the repository: $this->repository")
-            ->action('Notification Action', url("https://$link"));
+            ->action('Link to branch', url("https://$link"));
     }
 }
