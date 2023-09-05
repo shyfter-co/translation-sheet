@@ -159,6 +159,7 @@ class Reader
      * @param $group
      * @param $namespace
      * @param $file
+     * @param null $sheetTranslationPathBase
      */
     private function loadTranslations($locale, $group, $namespace, $file, $sheetTranslationPathBase = null)
     {
