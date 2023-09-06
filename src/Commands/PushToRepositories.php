@@ -34,16 +34,14 @@ class PushToRepositories extends Command
             $branch = uniqid('translations-');
             $this->info("Checking if branch: $branch has any changes");
             $output = [];
+            $this->info("Preparing to push to git repository: $repository");
             exec("cd $directory && git checkout -b $branch && git status --porcelain", $output);
-
             if (empty($output)) {
                 $this->info("No changes found on branch: $branch");
                 $this->info("Deleting branch: $branch");
                 exec("cd $directory && git checkout $master && git branch -D $branch",);
                 return null;
             }
-
-            $this->info("Preparing to push to git repository: $repository");
 
             $gitAddCommitProcess = new Process([
                 'git', 'checkout', $branch, '&&', 'git', 'commit', '-m', "'updating translation'"
