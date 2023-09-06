@@ -31,22 +31,34 @@ class PushToRepositories extends Command
             $directory = storage_path("$basePath/$name");
 
             // git push to remote if there were some changes
-            $branch = uniqid('translations-');
+            $branch = uniqid("translations-$name-");
             $this->info("Checking if branch: $branch has any changes");
             $output = [];
-            $this->info("Preparing to push to git repository: $repository");
-            exec("cd $directory && git checkout -b $branch && git status --porcelain", $output);
+            exec("cd $directory && git checkout -b $branch");
+
+            $gitStatusProcess = new Process(['git', 'status', '--porcelain'], $directory);
+            $gitStatusProcess->run();
+            $output = $gitStatusProcess->getOutput();
+
             if (empty($output)) {
                 $this->info("No changes found on branch: $branch");
                 $this->info("Deleting branch: $branch");
-                exec("cd $directory && git checkout $master && git branch -D $branch",);
+                exec("cd $directory && git checkout $master && git branch -D $branch");
+
                 return null;
             }
 
-            $gitAddCommitProcess = new Process([
-                'git', 'checkout', $branch, '&&', 'git', 'commit', '-m', "'updating translation'"
-            ], $directory);
-            $gitAddCommitProcess->run();
+            $comands = [
+                ['git', 'checkout', $branch],
+                ['git', 'add', '.'],
+                ['git', 'commit', '-m', '"updating translations"']
+            ];
+
+            foreach ($comands as $cmd) {
+                $process = new Process($cmd, $directory);
+                $process->mustRun();
+            }
+
             $gitPushProcess = new Process(['git', 'push', 'origin', $branch], $directory);
 
             $response = [
@@ -63,12 +75,23 @@ class PushToRepositories extends Command
                 $response['error'] = $processFailedException->getProcess()->getErrorOutput();
                 return $response;
             }
+
+//            $deleteProcess = new Process(
+//                ['git', 'checkout', $master, '&&', 'git', 'branch', '-D', $branch],
+//                $directory
+//            );
+//            $deleteProcess->run();
+
+            exec("cd $directory && git checkout $master && git branch -D $branch");
+
         })
             ->filter();
 
-        // Notifications
-        Notification::route('mail', 'jg@shyfter.co')
-            ->route('mail', 'mk@shyfter.co')
-            ->notify(new TranslationsPushedNotification($processedRepositories));
+        if (!$processedRepositories->isEmpty()) {
+            // Notifications
+            Notification::route('mail', 'jg@shyfter.co')
+                ->route('mail', 'mk@shyfter.co')
+                ->notify(new TranslationsPushedNotification($processedRepositories));
+        }
     }
 }

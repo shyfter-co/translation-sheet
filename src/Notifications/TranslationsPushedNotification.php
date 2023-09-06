@@ -49,9 +49,9 @@ class TranslationsPushedNotification extends Notification
         $message = (new MailMessage);
         foreach ($this->processedRepositories as $repository) {
             $repo = $repository['repository'];
-            $link = str_replace(':', '/', str_replace('git@', '', $repo));
+            $link = str_replace(':', '/', str_replace('git@', '', $repoName));
             $message
-                ->line("New translations branch '" . $repository['branch'] . "' was pushed to the repository: $repo")
+                ->line("New translations branch '" . $repository['branch'] . "' was pushed to the repository: $repoName")
                 ->action('Link to branch', url("https://$link"));
         }
 
@@ -69,20 +69,20 @@ class TranslationsPushedNotification extends Notification
             $repoName = $repository['repository'];
             $branch = $repository['branch'];
             if ($repository['success']) {
-                $link = str_replace(':', '/', str_replace('git@', '', $repo));
+                $link = str_replace(':', '/', str_replace('git@', '', $repoName));
                 $message
                     ->text("New translations branch '$branch' was pushed to the repository: $repoName")
                     ->text(url("https://$link"))
                     ->unfurlLinks();
             } else {
                 $message
+                    ->headerBlock("Branch $branch")
                     ->text("Could not push to repository: $repoName.")
                     ->contextBlock(function (ContextBlock $block)  use ($branch) {
                         $block->text("Branch $branch");
                     })
                     ->dividerBlock()
                     ->sectionBlock(function (SectionBlock $block) use ($branch, $repository) {
-                        $block->text("Process exited with the following errors:");
                         $block->text($repository['error']);
                     });
 
