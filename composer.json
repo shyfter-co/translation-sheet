@@ -12,13 +12,13 @@
     ],
     "require": {
         "google/apiclient": "^2.1",
-        "illuminate/console": "~5.8.0|^6.0|^7.0|^8.0|^v9.0|^10.0",
-        "illuminate/filesystem": "~5.8.0|^6.0|^7.0|^8.0|^v9.0|^10.0",
-        "illuminate/support": "~5.8.0|^6.0|^7.0|^8.0|^v9.0|^10.0",
-        "illuminate/notifications": "~5.8.0|^6.0|^7.0|^8.0|^v9.0|^10.0",
-        "illuminate/bus": "~5.8.0|^6.0|^7.0|^8.0|^v9.0|^10.0",
-        "illuminate/contracts": "~5.8.0|^6.0|^7.0|^8.0|^v9.0|^10.0",
-        "spatie/laravel-slack-alerts": "^1.2",
+        "illuminate/bus": "^10.0",
+        "illuminate/console": "^10.0",
+        "illuminate/contracts": "^10.0",
+        "illuminate/filesystem": "^10.0",
+        "illuminate/notifications": "^10.0",
+        "illuminate/support": "^10.0",
+        "laravel/slack-notification-channel": "^3.0",
         "nesbot/carbon": "^2.63"
     },
     "require-dev": {
