@@ -2,6 +2,8 @@
 
 namespace Nikaia\TranslationSheet\Commands;
 
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 use Illuminate\Console\Command;
 use Nikaia\TranslationSheet\SheetPusher;
 use Nikaia\TranslationSheet\Spreadsheet;
@@ -28,46 +30,47 @@ class PushToRepositories extends Command
             $master = $repo['master'];
             $directory = storage_path("$basePath/$name");
 
-            //Git Push to chosen remote
+            // git push to remote if there were some changes
             $branch = uniqid('translations-');
             $this->info("Checking if branch: $branch has any changes");
+            $output = [];
             exec("cd $directory && git checkout -b $branch && git status --porcelain", $output);
+
             if (empty($output)) {
                 $this->info("No changes found on branch: $branch");
                 $this->info("Deleting branch: $branch");
-                exec("cd $directory
-                                    && git checkout $master
-                                    && git branch -D $branch",
-                    $output,
-                    $result
-                );
-            } else {
-                $this->info("Preparing to push to git repository: $repository");
-                exec("cd $directory && git checkout $branch
-                                            && git add .
-                                            && git commit -m 'updating translation'
-                                            && git push origin $branch",
-                    $output,
-                    $result
-                );
+                exec("cd $directory && git checkout $master && git branch -D $branch",);
+                return null;
             }
-            return [$output, $result, $branch, $repository];
-        });
 
-//        switch ($result) {
-//            case Command::SUCCESS:
-//                return  "Git pushed branch $branch to the repository $repository";
-//            case Command::FAILURE:
-//                return "Could not push branch $branch to the repository $repository";
-//        }
+            $this->info("Preparing to push to git repository: $repository");
+
+            $gitAddCommitProcess = new Process([
+                'git', 'checkout', $branch, '&&', 'git', 'commit', '-m', "'updating translation'"
+            ], $directory);
+            $gitAddCommitProcess->run();
+            $gitPushProcess = new Process(['git', 'push', 'origin', $branch], $directory);
+
+            $response = [
+                'branch' => $branch,
+                'repository' => $repository,
+                'success' => true
+            ];
+
+            try {
+                $gitPushProcess->mustRun();
+                return $response;
+            } catch (ProcessFailedException $processFailedException) {
+                $response['success'] = false;
+                $response['error'] = $processFailedException->getProcess()->getErrorOutput();
+                return $response;
+            }
+        })
+            ->filter();
 
         // Notifications
-//        $processedRepositories
-
-//        Notification::route('mail', 'jg@shyfter.co')
-//            ->route('mail', 'lh@shyfter.co')
-//            ->route('mail', 'mk@shyfter.co')
-//            ->notify(new TranslationsPushedNotification($repository, $branch))
-        ;
+        Notification::route('mail', 'jg@shyfter.co')
+            ->route('mail', 'mk@shyfter.co')
+            ->notify(new TranslationsPushedNotification($processedRepositories));
     }
 }
