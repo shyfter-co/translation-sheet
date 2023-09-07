@@ -122,7 +122,7 @@ return [
     ],
 
     'notifications' => [
-        "slack" => env('SLACK_BOT_USER_TRANSLATIONS_CHANNEL'),
+        "slack" => env('TRANSLATIONS_SLACK_CHANNEL'),
         "mail" => env('TRANSLATIONS_NOTIFICANTS')
     ]
 ];
