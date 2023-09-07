@@ -127,7 +127,7 @@ $ php artisan translation_sheet:lock
 6/ Pull the translations
 
 This will pull the translations from the spreadsheet, and write it the language files in your applications.
-You can use git diff here to make sure eveything is ok (Conflicts, errors etc ...)
+You can use git diff here to make sure everything is ok (Conflicts, errors etc ...)
 ```bash
 $ php artisan translation_sheet:pull
 ```  
