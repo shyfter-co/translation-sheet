@@ -83,9 +83,13 @@ class PushToRepositories extends Command
 
         if (!$processedRepositories->isEmpty()) {
             // Notifications
-            Notification::route('mail', 'jg@shyfter.co')
-                ->route('mail', 'mk@shyfter.co')
-                ->notify(new TranslationsPushedNotification($processedRepositories));
+            $notification = app(Notification::class);
+            $notification->route('slack', config('translation_sheet.notifications.slack'));
+            $notificants = explode(',', config('translation_sheet.notifications.mail'));
+            foreach ($notificants as $notificant) {
+                $notification->route('mail', $notificant);
+            }
+            $notification->notify(new TranslationsPushedNotification($processedRepositories));
         }
     }
 }

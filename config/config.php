@@ -23,7 +23,7 @@ return [
     | Google service account credentials file path
     |--------------------------------------------------------------------------
     */
-    'serviceAccountCredentialsFile' => env('TS_SERVICE_ACCOUNT_CREDENTIALS_FILE', base_path('storage/google/service-account-crendentials.json')),
+    'serviceAccountCredentialsFile' => env('TS_SERVICE_ACCOUNT_CREDENTIALS_FILE', storage_path('google/service-account-crendentials.json')),
 
     /*
     |--------------------------------------------------------------------------
@@ -120,4 +120,9 @@ return [
             'laravel' => true,
         ]
     ],
+
+    'notifications' => [
+        "slack" => env('SLACK_BOT_USER_TRANSLATIONS_CHANNEL'),
+        "mail" => env('TRANSLATIONS_NOTIFICANTS')
+    ]
 ];
