@@ -35,7 +35,7 @@ class TranslationsPushedNotification extends Notification
      */
     public function via($notifiable): array
     {
-        return ['slack'];
+        return ['mail', 'slack'];
     }
 
     /**

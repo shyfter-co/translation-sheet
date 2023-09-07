@@ -7,7 +7,7 @@ return [
     | Google application name
     |--------------------------------------------------------------------------
     */
-    'googleApplicationName' => env('TS_GOOGLE_APP_NAME', 'Laravel Translation Sheet'),
+    'googleApplicationName' => env('TS_GOOGLE_APP_NAME', 'Shyfter Translation Sheet'),
 
     /*
     |--------------------------------------------------------------------------
