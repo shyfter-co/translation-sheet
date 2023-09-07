@@ -87,6 +87,10 @@ In your .env file or in your published config file (`config/translation_sheet.ph
     
     # The locales of the application (separated by comma) 
     TS_LOCALES=fr,en,es
+
+    # // Emails to send mail notifications (separated by comma)
+    TRANSLATIONS_SLACK_CHANNEL=
+    TRANSLATIONS_NOTIFICANTS=
   
   
 ## Usage
@@ -136,6 +140,11 @@ $ php artisan translation_sheet:unlock
 Open the spreadsheet in the browser
 ```bash
 $ php artisan translation_sheet:open
+```
+
+Push translations changes to the repositories 
+```bash
+$ php artisan translation_sheet:push-repositories
 ```  
 
 ## Excluding translations 
