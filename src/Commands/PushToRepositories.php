@@ -69,20 +69,14 @@ class PushToRepositories extends Command
 
             try {
                 $gitPushProcess->mustRun();
+                exec("cd $directory && git checkout $master && git branch -D $branch");
                 return $response;
             } catch (ProcessFailedException $processFailedException) {
                 $response['success'] = false;
                 $response['error'] = $processFailedException->getProcess()->getErrorOutput();
+                exec("cd $directory && git checkout $master && git branch -D $branch");
                 return $response;
             }
-
-//            $deleteProcess = new Process(
-//                ['git', 'checkout', $master, '&&', 'git', 'branch', '-D', $branch],
-//                $directory
-//            );
-//            $deleteProcess->run();
-
-            exec("cd $directory && git checkout $master && git branch -D $branch");
 
         })
             ->filter();
