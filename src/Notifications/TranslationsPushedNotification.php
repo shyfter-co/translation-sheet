@@ -3,7 +3,6 @@
 namespace Nikaia\TranslationSheet\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Collection;
@@ -48,7 +47,7 @@ class TranslationsPushedNotification extends Notification
     {
         $message = (new MailMessage);
         foreach ($this->processedRepositories as $repository) {
-            $repo = $repository['repository'];
+            $repoName = $repository['repository'];
             $link = str_replace(':', '/', str_replace('git@', '', $repoName));
             $message
                 ->line("New translations branch '" . $repository['branch'] . "' was pushed to the repository: $repoName")
