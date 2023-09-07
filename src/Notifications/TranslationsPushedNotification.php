@@ -3,6 +3,7 @@
 namespace Nikaia\TranslationSheet\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Collection;
@@ -34,7 +35,7 @@ class TranslationsPushedNotification extends Notification
      */
     public function via($notifiable): array
     {
-        return ['mail', 'slack'];
+        return ['slack'];
     }
 
     /**
@@ -69,22 +70,30 @@ class TranslationsPushedNotification extends Notification
             $branch = $repository['branch'];
             if ($repository['success']) {
                 $link = str_replace(':', '/', str_replace('git@', '', $repoName));
+                $message->headerBlock("New translations were pushed");
                 $message
-                    ->text("New translations branch '$branch' was pushed to the repository: $repoName")
-                    ->text(url("https://$link"))
-                    ->unfurlLinks();
-            } else {
-                $message
-                    ->headerBlock("Branch $branch")
-                    ->text("Could not push to repository: $repoName.")
-                    ->contextBlock(function (ContextBlock $block)  use ($branch) {
-                        $block->text("Branch $branch");
+                    ->contextBlock(function (ContextBlock $block) use ($branch, $repoName) {
+                        $block->text(
+                            "Branch: $branch \n\r".
+                            "Repository: $repoName \n\r"
+                        );
                     })
                     ->dividerBlock()
-                    ->sectionBlock(function (SectionBlock $block) use ($branch, $repository) {
+                    ->sectionBlock(function (SectionBlock $block) use ($branch, $repoName, $link) {
+                        $block->field($link)->markdown();
+                    });
+            } else {
+                $message->headerBlock("Could not push new translations");
+                $message
+                    ->contextBlock(function (ContextBlock $block) use ($branch, $repoName) {
+                        $block->text(
+                            "Branch: $branch \n\r Repository: $repoName \n\r"
+                        );
+                    })
+                    ->dividerBlock()
+                    ->sectionBlock(function (SectionBlock $block) use ($repository) {
                         $block->text($repository['error']);
                     });
-
             }
         }
 
