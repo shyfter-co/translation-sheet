@@ -4,6 +4,7 @@ namespace Nikaia\TranslationSheet\Commands;
 
 use Illuminate\Console\Command;
 use Nikaia\TranslationSheet\Sheet\TranslationsSheet;
+use Nikaia\TranslationSheet\Spreadsheet;
 
 class Status extends Command
 {
@@ -11,13 +12,18 @@ class Status extends Command
 
     protected $description = 'Display the status of translations : Locked / Unlocked.';
 
-    public function handle(TranslationsSheet $translationsSheet)
+    public function handle(Spreadsheet $spreadsheet)
     {
-        $locked = $translationsSheet->isTranslationsLocked();
+        $spreadsheet->sheets()->each(function (TranslationsSheet $translationsSheet) {
+            $this->info("Translation sheet status for [<comment>{$translationsSheet->getTitle()}</comment>] :");
 
-        $label = $locked ? 'LOCKED' : 'UNLOCKED';
-        $style = $locked ? 'error' : 'info';
+            $locked = $translationsSheet->isTranslationsLocked();
 
-        $this->line("Translations area is <$style>$label</$style>");
+            $label = $locked ? 'LOCKED' : 'UNLOCKED';
+            $style = $locked ? 'error' : 'info';
+
+            $this->line("Translations area is <$style>$label</$style>");
+            $this->output->writeln(PHP_EOL);
+        });
     }
 }
