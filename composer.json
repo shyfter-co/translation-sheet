@@ -19,7 +19,7 @@
         "illuminate/notifications": "^11.0",
         "illuminate/support": "^11.0",
         "laravel/slack-notification-channel": "^3.0",
-        "nesbot/carbon": "^2.63"
+        "nesbot/carbon": "^3.7"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.0",
